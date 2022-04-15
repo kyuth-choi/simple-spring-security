@@ -1,5 +1,6 @@
 package com.example.spring.security.security;
 
+import com.example.spring.security.entity.UserInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

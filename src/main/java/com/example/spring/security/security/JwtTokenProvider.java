@@ -1,9 +1,10 @@
 package com.example.spring.security.security;
 
-import com.example.spring.security.entity.UserInfo;
 import com.example.spring.security.vo.LoginInfo;
-import io.jsonwebtoken.*;
-import io.jsonwebtoken.lang.Objects;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,7 +13,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.servlet.http.HttpServletRequest;
-import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Set;
@@ -24,7 +24,6 @@ public class JwtTokenProvider {
     private static final String _SECRET_KEY = "security-test";
     private static final long _EXPIRE_TIME = 36000000;
     private static final String _HEADER_KEY = "x-api-key";
-
 
     @Getter
     enum claimSet {
@@ -48,6 +47,7 @@ public class JwtTokenProvider {
 
     // JWT 토큰에서 인증 정보 조회
     public static Authentication getAuthentication(String token) {
+
         Claims claims = Jwts.parser().setSigningKey(_SECRET_KEY).parseClaimsJws(token).getBody();
         Set<GrantedAuthority> authorities = Arrays.stream(claims.get(claimSet._ROLES.value).toString().split(","))
                 .map(SimpleGrantedAuthority::new)
